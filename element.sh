@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PSQL="psql -X --username=yellowflash2041 --dbname=periodic_table --tuples-only -c"
+PSQL="psql --username=freecodecamp --dbname=periodic_table -t --no-align -c"
 
 INPUT=$1
 
@@ -11,17 +11,17 @@ else
   # find input (atomic number)
   if [[ ! $INPUT =~ ^[0-9]+$ ]]
   then
-    ATOMIC_NUMBER_VAR=$($PSQL "SELECT atomic_number FROM elements WHERE symbol = '$1' OR name='$1'")
+    ATOMIC_NUMBER_BY_NAME=$($PSQL "SELECT atomic_number FROM elements WHERE symbol = '$1' OR name='$1'")
   else
-    ATOMIC_NUMBER_INT=$($PSQL "SELECT atomic_number FROM elements WHERE atomic_number = $1")
+    ATOMIC_NUMBER_BY_NUMBER=$($PSQL "SELECT atomic_number FROM elements WHERE atomic_number = $1")
   fi
 
   # define ATOMIC_NUMBER
-  if [[ -z $ATOMIC_NUMBER_VAR ]]
+  if [[ -z $ATOMIC_NUMBER_BY_NAME ]]
   then
-    ATOMIC_NUMBER=$ATOMIC_NUMBER_INT
+    ATOMIC_NUMBER=$ATOMIC_NUMBER_BY_NUMBER
   else
-    ATOMIC_NUMBER=$ATOMIC_NUMBER_VAR
+    ATOMIC_NUMBER=$ATOMIC_NUMBER_BY_NAME
   fi
 
   if [[ -z $ATOMIC_NUMBER ]]
